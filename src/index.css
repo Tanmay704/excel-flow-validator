@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 215 100% 50%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -35,19 +36,12 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -98,4 +92,36 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.file-drop-area {
+  @apply border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer transition-all duration-300;
+}
+
+.file-drop-area:hover, .file-drop-area.drag-active {
+  @apply border-primary bg-blue-50;
+}
+
+.progress-step {
+  @apply relative flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 transition-all duration-300;
+}
+
+.progress-step.active {
+  @apply bg-primary text-white;
+}
+
+.progress-step.completed {
+  @apply bg-success text-white;
+}
+
+.progress-step.error {
+  @apply bg-error text-white;
+}
+
+.progress-line {
+  @apply flex-1 h-1 bg-gray-200 transition-all duration-300;
+}
+
+.progress-line.completed {
+  @apply bg-success;
 }
