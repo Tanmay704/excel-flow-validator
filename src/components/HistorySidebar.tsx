@@ -2,6 +2,7 @@
 import React from 'react';
 import { FileRecord } from '@/store/fileHistory';
 import { Files, History } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import { 
   Sidebar, 
   SidebarContent, 
