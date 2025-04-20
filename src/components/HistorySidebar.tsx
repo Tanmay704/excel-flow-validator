@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { FileRecord } from '@/store/fileHistory';
-import { FileInput, Clock } from 'lucide-react';
+import { Files, History } from 'lucide-react';
 import { 
   Sidebar, 
   SidebarContent, 
@@ -22,11 +22,9 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({ history, onFileSelect }
   return (
     <Sidebar>
       <SidebarHeader>
-        <div className="p-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2">
-            <Clock size={20} />
-            Upload History
-          </h2>
+        <div className="flex items-center gap-2 px-4 py-2">
+          <History size={20} className="text-muted-foreground" />
+          <h2 className="text-lg font-semibold">Upload History</h2>
         </div>
       </SidebarHeader>
       <SidebarContent>
@@ -37,17 +35,16 @@ const HistorySidebar: React.FC<HistorySidebarProps> = ({ history, onFileSelect }
               <SidebarMenuItem key={record.id}>
                 <SidebarMenuButton
                   onClick={() => onFileSelect(record)}
-                  className={`${
-                    record.validationStatus === 'success'
-                      ? 'text-success hover:text-success'
-                      : record.validationStatus === 'error'
-                      ? 'text-destructive hover:text-destructive'
-                      : ''
-                  }`}
+                  className={cn(
+                    "w-full",
+                    record.validationStatus === 'success' && "text-success hover:text-success/90",
+                    record.validationStatus === 'error' && "text-destructive hover:text-destructive/90",
+                    record.validationStatus === 'pending' && "text-muted-foreground"
+                  )}
                 >
-                  <FileInput size={16} />
-                  <span>{record.name}</span>
-                  <span className="text-xs text-muted-foreground ml-2">
+                  <Files size={16} />
+                  <span className="truncate">{record.name}</span>
+                  <span className="text-xs text-muted-foreground ml-auto">
                     {new Date(record.uploadDate).toLocaleDateString()}
                   </span>
                 </SidebarMenuButton>
