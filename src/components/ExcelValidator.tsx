@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import FileUpload from './FileUpload';
 import ValidationProgress, { StepStatus } from './ValidationProgress';
@@ -194,73 +195,79 @@ const ExcelValidator: React.FC<ExcelValidatorProps> = ({ selectedFile }) => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-6">
-      {!isValidating && !validationResult && (
-        <>
-          <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold mb-2">Excel Validator</h1>
-            <p className="text-gray-600">
-              Upload your Excel file to validate its structure and content
-            </p>
-          </div>
-          
-          <FileUpload onFileSelect={handleFileSelect} />
-          
-          {file && (
-            <div className="mt-8 text-center">
-              <Button 
-                onClick={startValidation} 
-                className="px-6 py-2 bg-primary hover:bg-primary/90"
-              >
-                Start Validation
-              </Button>
+    <div className="flex-1 flex items-center justify-center p-6">
+      <div className="w-full max-w-4xl bg-card rounded-xl border border-border shadow-lg transition-all duration-300 hover:shadow-xl">
+        {!isValidating && !validationResult && (
+          <div className="space-y-8 p-8">
+            <div className="text-center space-y-3">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                Excel Validator
+              </h1>
+              <p className="text-muted-foreground text-lg">
+                Upload your Excel file to validate its structure and content
+              </p>
             </div>
-          )}
-        </>
-      )}
-      
-      {(isValidating || validationResult) && (
-        <>
-          <div className="mb-8 text-center">
-            <h1 className="text-3xl font-bold mb-2">Excel Validation Process</h1>
-            <p className="text-gray-600">
-              {isValidating 
-                ? `Validating step ${currentStep} of 5...` 
-                : validationResult?.success 
-                  ? "All validation steps completed successfully!"
-                  : "Validation process completed with errors."
-              }
-            </p>
+            
+            <FileUpload onFileSelect={handleFileSelect} />
+            
+            {file && (
+              <div className="flex justify-center pt-4">
+                <Button 
+                  onClick={startValidation} 
+                  className="px-8 py-2.5 bg-primary hover:bg-primary/90 shadow-md hover:shadow-lg transition-all duration-300"
+                >
+                  Start Validation
+                </Button>
+              </div>
+            )}
           </div>
-          
-          <ValidationProgress 
-            currentStep={currentStep}
-            stepStatuses={stepStatuses}
-          />
-          
-          {validationResult && (
-            <ValidationResults 
-              success={validationResult.success}
-              message={validationResult.message}
+        )}
+        
+        {(isValidating || validationResult) && (
+          <div className="space-y-8 p-8">
+            <div className="text-center space-y-3">
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">
+                Excel Validation Process
+              </h1>
+              <p className="text-muted-foreground text-lg">
+                {isValidating 
+                  ? `Validating step ${currentStep} of 5...` 
+                  : validationResult?.success 
+                    ? "All validation steps completed successfully!"
+                    : "Validation process completed with errors."
+                }
+              </p>
+            </div>
+            
+            <ValidationProgress 
+              currentStep={currentStep}
+              stepStatuses={stepStatuses}
             />
-          )}
-          
-          {validationResult && (
-            <div className="mt-8 text-center">
-              <Button 
-                onClick={() => {
-                  setFile(null);
-                  resetValidation();
-                }}
-                variant="outline"
-                className="px-6 py-2"
-              >
-                Upload Another File
-              </Button>
-            </div>
-          )}
-        </>
-      )}
+            
+            {validationResult && (
+              <>
+                <ValidationResults 
+                  success={validationResult.success}
+                  message={validationResult.message}
+                />
+                
+                <div className="flex justify-center pt-4">
+                  <Button 
+                    onClick={() => {
+                      setFile(null);
+                      resetValidation();
+                    }}
+                    variant="outline"
+                    className="px-8 py-2.5 hover:bg-accent transition-all duration-300"
+                  >
+                    Upload Another File
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
