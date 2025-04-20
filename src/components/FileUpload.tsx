@@ -75,13 +75,17 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
     }
   };
 
-  const triggerFileInput = () => {
+  const triggerFileInput = (e?: React.MouseEvent) => {
+    if (e) {
+      e.stopPropagation(); // Prevent event from bubbling up to parent
+    }
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
   };
 
-  const removeFile = () => {
+  const removeFile = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Stop propagation to prevent triggering file input
     setFile(null);
   };
 
@@ -108,10 +112,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
               <FileInput size={24} className="text-success" />
               <span className="font-medium text-gray-800 break-all">{file.name}</span>
               <button 
-                onClick={(e) => { 
-                  e.stopPropagation();
-                  removeFile();
-                }}
+                onClick={removeFile}
                 className="p-1 rounded-full hover:bg-gray-200"
               >
                 <X size={16} className="text-gray-500" />
@@ -130,7 +131,11 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
             <Upload size={48} className="text-gray-400 mb-3" />
             <p className="text-lg font-medium mb-2">Drag and drop your Excel file here</p>
             <p className="text-gray-500 mb-4">or click to browse</p>
-            <Button type="button" variant="outline" onClick={triggerFileInput}>
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={triggerFileInput}
+            >
               <FileInput size={16} className="mr-2" />
               Select Excel File
             </Button>
