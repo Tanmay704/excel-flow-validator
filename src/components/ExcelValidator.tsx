@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FileUpload from './FileUpload';
 import ValidationProgress, { StepStatus } from './ValidationProgress';
 import ValidationResults from './ValidationResults';
@@ -12,8 +11,13 @@ import {
   validateStep5 
 } from '../services/validationApi';
 import { useToast } from "@/components/ui/use-toast";
+import { fileHistoryStore, FileRecord } from '@/store/fileHistory';
 
-const ExcelValidator: React.FC = () => {
+interface ExcelValidatorProps {
+  selectedFile?: FileRecord | null;
+}
+
+const ExcelValidator: React.FC<ExcelValidatorProps> = ({ selectedFile }) => {
   const [file, setFile] = useState<File | null>(null);
   const [isValidating, setIsValidating] = useState<boolean>(false);
   const [currentStep, setCurrentStep] = useState<number>(1);
@@ -27,6 +31,18 @@ const ExcelValidator: React.FC = () => {
   
   const { toast } = useToast();
 
+  useEffect(() => {
+    if (selectedFile) {
+      setValidationResult({
+        success: selectedFile.validationStatus === 'success',
+        message: selectedFile.errorMessage || "Validation completed successfully!",
+      });
+      setStepStatuses(prev => prev.map(() => 
+        selectedFile.validationStatus === 'success' ? 'completed' : 'error'
+      ));
+    }
+  }, [selectedFile]);
+
   const resetValidation = () => {
     setIsValidating(false);
     setCurrentStep(1);
@@ -35,6 +51,14 @@ const ExcelValidator: React.FC = () => {
   };
 
   const handleFileSelect = (selectedFile: File) => {
+    const fileRecord: FileRecord = {
+      id: Math.random().toString(36).substr(2, 9),
+      name: selectedFile.name,
+      uploadDate: new Date().toISOString(),
+      validationStatus: 'not_started'
+    };
+    
+    fileHistoryStore.addFile(fileRecord);
     setFile(selectedFile);
     resetValidation();
   };
@@ -61,7 +85,14 @@ const ExcelValidator: React.FC = () => {
     setIsValidating(true);
 
     try {
-      // Step 1
+      const currentFileRecord = fileHistoryStore.getHistory().find(
+        record => record.name === file.name
+      );
+
+      if (currentFileRecord) {
+        fileHistoryStore.updateFileStatus(currentFileRecord.id, 'pending');
+      }
+
       setCurrentStep(1);
       updateStepStatus(1, 'loading');
       const step1Result = await validateStep1();
@@ -77,7 +108,6 @@ const ExcelValidator: React.FC = () => {
       
       updateStepStatus(1, 'completed');
       
-      // Step 2
       setCurrentStep(2);
       updateStepStatus(2, 'loading');
       const step2Result = await validateStep2();
@@ -93,7 +123,6 @@ const ExcelValidator: React.FC = () => {
       
       updateStepStatus(2, 'completed');
       
-      // Step 3
       setCurrentStep(3);
       updateStepStatus(3, 'loading');
       const step3Result = await validateStep3();
@@ -109,7 +138,6 @@ const ExcelValidator: React.FC = () => {
       
       updateStepStatus(3, 'completed');
       
-      // Step 4
       setCurrentStep(4);
       updateStepStatus(4, 'loading');
       const step4Result = await validateStep4();
@@ -125,7 +153,6 @@ const ExcelValidator: React.FC = () => {
       
       updateStepStatus(4, 'completed');
       
-      // Step 5
       setCurrentStep(5);
       updateStepStatus(5, 'loading');
       const step5Result = await validateStep5();
@@ -141,7 +168,14 @@ const ExcelValidator: React.FC = () => {
       
       updateStepStatus(5, 'completed');
       
-      // All steps completed successfully
+      if (currentFileRecord) {
+        fileHistoryStore.updateFileStatus(
+          currentFileRecord.id,
+          'success',
+          "All validation steps completed successfully!"
+        );
+      }
+      
       setValidationResult({
         success: true,
         message: "All validation steps completed successfully!",
