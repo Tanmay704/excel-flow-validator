@@ -6,9 +6,10 @@ import { toast } from "@/components/ui/use-toast";
 
 interface FileUploadProps {
   onFileSelect: (file: File) => void;
+  multiple?: boolean;
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
+const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect, multiple = false }) => {
   const [file, setFile] = useState<File | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -104,6 +105,7 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileSelect }) => {
           onChange={handleFileChange}
           accept=".xlsx,.xls,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel"
           className="hidden"
+          multiple={multiple}
         />
         
         {file ? (
