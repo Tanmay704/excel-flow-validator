@@ -1,6 +1,8 @@
+
 import { useState, useEffect } from "react";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import MultiExcelValidator from "@/components/MultiExcelValidator";
+import HistorySidebar from "@/components/HistorySidebar";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FileRecord, fileHistoryStore } from "@/store/fileHistory";

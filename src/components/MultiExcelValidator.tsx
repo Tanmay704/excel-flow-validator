@@ -31,7 +31,7 @@ const MultiExcelValidator: React.FC = () => {
       <div className="mb-6 w-full max-w-2xl">
         <FileUpload
           onFileSelect={file => handleFilesSelect([file])}
-          allowMultiple
+          multiple={true}
         />
       </div>
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 w-full max-w-6xl justify-center">
@@ -49,4 +49,3 @@ const MultiExcelValidator: React.FC = () => {
 };
 
 export default MultiExcelValidator;
-
