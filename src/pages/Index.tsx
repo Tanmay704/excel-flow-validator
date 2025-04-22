@@ -1,8 +1,6 @@
-
 import { useState, useEffect } from "react";
-import ExcelValidator from "@/components/ExcelValidator";
-import HistorySidebar from "@/components/HistorySidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import MultiExcelValidator from "@/components/MultiExcelValidator";
 import { Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FileRecord, fileHistoryStore } from "@/store/fileHistory";
@@ -15,14 +13,12 @@ const Index = () => {
   const { toast } = useToast();
 
   useEffect(() => {
-    // Initialize dark mode from localStorage
     const storedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const initialDarkMode = storedTheme === 'dark' || (!storedTheme && prefersDark);
     setIsDarkMode(initialDarkMode);
     document.documentElement.classList.toggle('dark', initialDarkMode);
 
-    // Load file history
     setHistory(fileHistoryStore.getHistory());
   }, []);
 
@@ -61,13 +57,10 @@ const Index = () => {
             </div>
           </div>
         </header>
-        
         <div className="flex-1 flex">
           <HistorySidebar history={history} onFileSelect={handleFileSelect} />
-          <main className="flex-1 p-4 md:p-8">
-            <div className="w-full bg-card rounded-lg shadow-sm border border-border overflow-hidden">
-              <ExcelValidator selectedFile={selectedFile} />
-            </div>
+          <main className="flex-1 flex flex-col items-center justify-center bg-background">
+            <MultiExcelValidator />
           </main>
         </div>
       </div>
